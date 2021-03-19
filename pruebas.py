@@ -14,6 +14,8 @@ def esnumero(caracter):
 	else:
 		return False
 
+def esID();
+
 def AUTOMATA_CADENA():   
     print("____________________________") 
     try:
