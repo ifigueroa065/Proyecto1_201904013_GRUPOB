@@ -1,0 +1,31 @@
+digraph grafo2{ 
+node[ style=filled ,color="#28EE99"];
+nombre[ style=filled ,color="#3CC0DF",peripheries=2,label="Restaurante LFP"];
+nombre->Bebidas
+12[label="Bebida #2  Q10.50
+Descripción Bebida 2
+"]
+Bebidas->12
+15[label="Bebida #1  Q11.00
+Descripción Bebida 1
+"]
+Bebidas->15
+nombre->Desayunos
+18[label="Desayuno 3  Q35.00
+Descripción Desayuno 3
+"]
+Desayunos->18
+21[label="Desayuno 2  Q40.00
+Descripción Desayuno 2
+"]
+Desayunos->21
+24[label="Desayuno 1  Q45.00
+Descripción Desayuno 1
+"]
+Desayunos->24
+nombre->  Postres
+27[label="Postre 1  Q25.00
+Descripción Postre 1
+"]
+  Postres->27
+}

@@ -1,5 +1,6 @@
 import os
 import tkinter.filedialog
+import webbrowser
 from MENU import OPCIONES_MENU
 from TOKEN import TOKEN
 from ERROR import ERRORES
@@ -34,6 +35,7 @@ TOKENS_O=[]
 ERRORES_O=[]
 
 ELEMENTOS_M=[]
+limite_precio=0
 
 def mostrarError(simbolo,expectativa,linea,columna):
     print("Error, no se reconoce el simbolo: " + simbolo + ", se esperaba: " + expectativa + " linea: " + str(linea) + ", columna: " + str(columna) )
@@ -59,7 +61,12 @@ def esRES(caracter):
         return False
 def EsNumero(caracter):
     return (ord(caracter) >= 48 and ord(caracter) <= 57)
-
+def ES_VALIDO(num):
+  s=float(num)
+  if s>=0 and s<10000:
+    return  True
+  else:
+    return False
 def CREAR_REPO_MENU():
     global TOKENS,ERRORES_M,nombre
     os.system('cls')
@@ -559,12 +566,13 @@ def GENERAR_MENU():
       y=0
       while y<len(OPCIONES_M):
         if OPCIONES_M[y].seccion==seccion[x]:
+          p="{0:.2f}".format(float(OPCIONES_M[y].precio))
           f.write("""
         
             <!-- PARA AGREGAR PRODUCTOS-->
             <h3 class="post-subtitle">
             """)
-          f.write( OPCIONES_M[y].nombre +"        > Q"+str(OPCIONES_M[y].precio))
+          f.write( OPCIONES_M[y].nombre +"        > Q"+str(p))
           f.write("</h3>")
           f.write("""<p class="post-meta">""")
           f.write(OPCIONES_M[y].descripcion)
@@ -635,7 +643,8 @@ def GENERAR_MENU():
         """)
     
 
-    f.close()     
+    f.close()
+    
 
 def GENERAR_FACTURA():
   global OPCIONES_M,nombre,DATO,PEDIDOS
@@ -909,6 +918,215 @@ def OBTENER_DATOS():
         print(i.id)
         print(OPCIONES_M[x].precio)
       x+=1
+
+def ORDENAR():
+  global OPCIONES_M
+  for numPasada in range(len(OPCIONES_M)-1,0,-1):
+      for i in range(numPasada):
+          if OPCIONES_M[i].precio>OPCIONES_M[i+1].precio:
+              temp = OPCIONES_M[i].precio
+              temp_seccion= OPCIONES_M[i].seccion
+              temp_id= OPCIONES_M[i].id
+              temp_nombre= OPCIONES_M[i].nombre
+              temp_descripcion= OPCIONES_M[i].descripcion
+
+              OPCIONES_M[i].precio = OPCIONES_M[i+1].precio
+              OPCIONES_M[i].seccion=OPCIONES_M[i+1].seccion
+              OPCIONES_M[i].id=OPCIONES_M[i+1].id
+              OPCIONES_M[i].nombre=OPCIONES_M[i+1].nombre
+              OPCIONES_M[i].descripcion=OPCIONES_M[i+1].descripcion
+                
+              OPCIONES_M[i+1].precio = temp
+              OPCIONES_M[i+1].seccion = temp_seccion
+              OPCIONES_M[i+1].id = temp_id
+              OPCIONES_M[i+1].nombre = temp_nombre
+              OPCIONES_M[i+1].descripcion = temp_descripcion
+    
+def GENERAR_MENU_2(limite):
+    global nombre,CONT_P,n_seccion,seccion,ELEMENTOS_M
+    print ("")
+    f = open('REPORTES/MENU.html','w', encoding="utf-8")
+    f.write("""<!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>PROYECTO_LFP1</title>
+
+  <link href="assets/img/icon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="img/icon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+        
+            <a class="navbar-brand" href="MENU.html">""")
+    f.write(nombre[0])
+    f.write("""
+            </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="MENU.html">Menú</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="FACTURA.html">Factura</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="MENU_REPORTE.html">Reporte</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/6.jpeg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>BIENVENIDO</h1>
+            <span class="subheading"> </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <!-- AGREGAR OTRA SECCION-->
+        
+    """)
+    
+    x=0 
+    while x<len(seccion):
+      f.write("""
+          <div class="post-preview">
+          <a >
+            <center><h2 class="post-title">
+      """)
+      f.write("------------"+ seccion[x] +"------------")
+      f.write("""
+
+        </h2></center>
+            </a>
+            <br>
+      """)
+      y=0
+      while y<len(OPCIONES_M):
+        if OPCIONES_M[y].seccion==seccion[x]:
+          if float(OPCIONES_M[y].precio)<=limite:
+            p="{0:.2f}".format(float(OPCIONES_M[y].precio))
+            f.write("""
+          
+              <!-- PARA AGREGAR PRODUCTOS-->
+              <h3 class="post-subtitle">
+              """)
+            f.write( OPCIONES_M[y].nombre +"        > Q"+str(p))
+            f.write("</h3>")
+            f.write("""<p class="post-meta">""")
+            f.write(OPCIONES_M[y].descripcion)
+            f.write("</p><br>")
+          
+        y=y+1
+      x+=1
+    
+      f.write("</p>")
+    f.write("""
+            
+            <!-- CIERRA LA SECCION-->
+        </div>
+        
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted"> &copy; Facultad de Ingenería 2021</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+
+    </body>
+
+    </html>
+
+        """)
+    
+
+    f.close()
+        
+
 
 def Op1():
     global OPCIONES_M,nombre,nombre_p,seccion,identificador,precio,descripcion,n_seccion,n_token,TOKENS,n_error_m,ERRORES_M
@@ -1217,10 +1435,6 @@ def Op1():
         print("     **************************      ")
         print("            SUCCESSFULLY             ")
         print("     **************************      ")
-        print("hay "+ str(n_seccion)+ "secciones")
-        print("hay "+ str(CONT_P)+ "productos")
-        for i in OPCIONES_M:
-            print(i.id)
         
 def Op2():
     global ERRORES_O,n_token_o,TOKENS_O,n_error_o,DATO,PEDIDOS
@@ -1409,48 +1623,93 @@ def Op2():
             columna+=1
     finally:
         #os.system('cls')
-        print("esto fue lo que guarde")
-        for i in CADENA:
-            print(i)
+       
         print("     **************************      ")
         print("            SUCCESSFULLY             ")
         print("     **************************      ")
-        for i in PEDIDOS:
-          print(i.cantidad + ","+ i.id)
+        
         
       
 def Op3():
-    global CONT_P,n_seccion,seccion,ELEMENTOS_M, OPCIONES_M
+    global CONT_P,n_seccion,seccion,ELEMENTOS_M, OPCIONES_M,limite_precio
     os.system('cls')
     print("--------- Opción Generar Menú---------")
-    GENERAR_MENU()
-    x=0 
-    while x<len(seccion):
-      print(seccion[x])
-      y=0
-      while y<len(OPCIONES_M):
-        if OPCIONES_M[y].seccion==seccion[x]:
-          print("ID-----> " + OPCIONES_M[y].id)
-          print("NOMBRE-----> " + OPCIONES_M[y].nombre)
-          print("PRECIO-----> " + str(OPCIONES_M[y].precio))
-          print("DESCRIPCION-----> " + OPCIONES_M[y].descripcion)
-        y=y+1
-      x+=1
+     
+    print("¿ DESEA PONER LIMITE DE PRECIO ?")
+    print("1.SI")
+    print("2.NO")
+    op=input("              >>  ")
+      
+    if op=="1":
+      print ("")
+      cox=True
+      while cox==True:
+        print("INGRESE EL LIMITE DE PRECIO")
+        lim=input("              >>  ")
+        if ES_VALIDO(lim):
+          limite_precio=float(lim)
+          GENERAR_MENU_2(limite_precio)
+          input("\npulsa enter para volver...")
+          cox=False
+        else:
+          print("No seleccionó una opción valida")
+          cox=True
+          input("\npulsa enter para volver...")
+    elif op=="2":
+        print ("")
+        os.system('cls')
+        GENERAR_MENU()
+        input("\npulsa enter para volver...")
+    else:
+      print ("***ERROR****")
+      os.system('cls')
+      input("No has pulsado ninguna opción correcta...\npulsa enter para volver...")
+        
+    
    
 def Op4():
     global ERRORES_O,n_token_o,TOKENS_O
     os.system('cls')
     print("--------- Opción Generar Factura --------")
     GENERAR_FACTURA()
-    
+
+def CNodo(id,contenido):
+  return (id+"[label=\""+contenido+"\"]\n")
+
+def UnirNodo(A,B):
+  return (A+"->"+B+"\n") 
 
 def Op5():
-    global OPCIONES_M
+    global OPCIONES_M,nombre,seccion
     os.system('cls')
     print("------------------ Opción Generar Gráfica ------------------")
     print ("")
-    for u  in OPCIONES_M:
-      print(u)
+    ORDENAR()
+    with open("arbol.dot", mode="w",encoding="utf-8") as o:
+      o.write("digraph grafo2{ \n");
+      o.write("node[ style=filled ,color=\"#28EE99\"];\n");
+      o.write("nombre[ style=filled ,color=\"#3CC0DF\",peripheries=2,label=\""+nombre[0]+"\"];\n");
+      
+      x=0
+      contador=12
+      while x<len(seccion):
+        o.write("nombre->"+ seccion[x] +"\n");
+        for i in OPCIONES_M:
+          if i.seccion==seccion[x]:
+            p="{0:.2f}".format(float(i.precio))
+            content=str(i.nombre) +"  "+ "Q"+str(p)+"\n"+ str(i.descripcion)+"\n"
+            o.write(CNodo(str(contador),content));
+            o.write(UnirNodo(seccion[x],str(contador)))
+            contador=contador+3
+        x+=1
+      o.write("}\n");
+    os.system('dot -Tpdf arbol.dot -o arbol.pdf');  
+
+  
+    print("     **************************      ")
+    print("            SUCCESSFULLY             ")
+    print("     **************************      ")
+    
     
 
 def MENU():	

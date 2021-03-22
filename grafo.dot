@@ -1,0 +1,10 @@
+digraph menu{
+node[style=filled ,color="#28EE99 ",Gcharset="latin1"];
+op=[label=""]
+RESTAURANTE_LFP->SECCION1
+RESTAURANTE_LFP->SECCION2
+RESTAURANTE_LFP->SECCION3
+
+SECCION1->{label="OP1"}
+SECCION1->OP2
+}
